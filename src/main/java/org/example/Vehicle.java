@@ -1,5 +1,6 @@
 package org.example;
 
+
 public class Vehicle {
     private String vin;
     private int year;

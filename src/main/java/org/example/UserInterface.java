@@ -84,6 +84,7 @@ public class UserInterface {
         dealership = fileManager.getDealership();
     }
 
+
     // MENU
 
     private void displayMenu() {

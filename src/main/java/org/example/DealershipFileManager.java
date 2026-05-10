@@ -96,6 +96,7 @@ public class DealershipFileManager {
                 );
             }
 
+
             writer.close();
 
             System.out.println("Inventory saved successfully.");
