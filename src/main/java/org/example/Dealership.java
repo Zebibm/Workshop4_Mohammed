@@ -44,29 +44,103 @@ public class Dealership {
         vehicles.remove(vehicle);
     }
 
-    // Search methods (temporary)
+    // Search by price
     public ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
-        return null;
+
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getPrice() >= min &&
+                    vehicle.getPrice() <= max) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 
+    // Search by make/model
     public ArrayList<Vehicle> getVehiclesByMakeModel(String make, String model) {
-        return null;
+
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getMake().equalsIgnoreCase(make) &&
+                    vehicle.getModel().equalsIgnoreCase(model)) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 
-    public ArrayList<Vehicle> getVehiclesByYear(int minYear, int maxYear) {
-        return null;
+    // Search by year
+    public ArrayList<Vehicle> getVehiclesByYear(int min, int max) {
+
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getYear() >= min &&
+                    vehicle.getYear() <= max) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 
+    // Search by color
     public ArrayList<Vehicle> getVehiclesByColor(String color) {
-        return null;
+
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getColor().equalsIgnoreCase(color)) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 
+    // Search by mileage
     public ArrayList<Vehicle> getVehiclesByMileage(int min, int max) {
-        return null;
+
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getMileage() >= min &&
+                    vehicle.getMileage() <= max) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 
+    // Search by type
     public ArrayList<Vehicle> getVehiclesByType(String type) {
-        return null;
 
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            if (vehicle.getType().equalsIgnoreCase(type)) {
+
+                matches.add(vehicle);
+            }
+        }
+
+        return matches;
     }
 }
