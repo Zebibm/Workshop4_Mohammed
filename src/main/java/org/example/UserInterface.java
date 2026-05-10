@@ -90,7 +90,7 @@ public class UserInterface {
 
         System.out.println("\n=====================================");
         System.out.println("        CAR DEALERSHIP SYSTEM");
-        System.out.println("=====================================\n");
+        System.out.println("===================================== \n");
 
         System.out.println("  1  - List ALL vehicles");
         System.out.println("  2  - Find vehicles within a price range");
