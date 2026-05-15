@@ -1,52 +1,30 @@
 package org.example;
 
+// Abstract class because we never create a generic contract
+// We only create SalesContract or LeaseContract
 public abstract class Contract {
+
+    // Common contract information
     private String date;
     private String customerName;
     private String customerEmail;
     private Vehicle vehicleSold;
 
-    public Contract(String date,
-                    String customerName,
-                    String customerEmail,
-                    Vehicle vehicleSold) {
-
+    // Constructor for shared fields
+    public Contract(String date, String customerName, String customerEmail, Vehicle vehicleSold) {
         this.date = date;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.vehicleSold = vehicleSold;
     }
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+    // Getters for shared data
+    public String getDate() { return date; }
+    public String getCustomerName() { return customerName; }
+    public String getCustomerEmail() { return customerEmail; }
+    public Vehicle getVehicleSold() { return vehicleSold; }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public Vehicle getVehicleSold() {
-        return vehicleSold;
-    }
-
-    public void setVehicleSold(Vehicle vehicleSold) {
-        this.vehicleSold = vehicleSold;
-    }
+    // Abstract methods (must be implemented in child classes)
     public abstract double getTotalPrice();
     public abstract double getMonthlyPayment();
 }
