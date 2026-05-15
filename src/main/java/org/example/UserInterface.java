@@ -10,6 +10,7 @@ public class UserInterface {
     private Dealership dealership;
     private Scanner scanner = new Scanner(System.in);
     private DealershipFileManager fileManager = new DealershipFileManager();
+    private ContractFileManager contractFileManager = new ContractFileManager();
 
     public void display() {
 
@@ -33,7 +34,9 @@ public class UserInterface {
                 case 7 -> processGetByTypeRequest();
                 case 8 -> processAddVehicleRequest();
                 case 9 -> processRemoveVehicleRequest();
+                case 10 -> processSellOrLeaseRequest();
                 case 99 -> System.out.println("Goodbye!");
+
                 default -> System.out.println("Invalid option.");
             }
 
@@ -66,10 +69,11 @@ public class UserInterface {
         System.out.println("7 - Type");
         System.out.println("8 - Add vehicle");
         System.out.println("9 - Remove vehicle");
+        System.out.println("10 - Sell / Lease vehicle");
         System.out.println("99 - Quit");
     }
 
-    // ================= SAFE INPUT METHODS =================
+    // ================= INPUT HELPERS =================
 
     private int readInt(String message) {
         while (true) {
@@ -80,7 +84,7 @@ public class UserInterface {
                 scanner.nextLine();
                 return value;
             } else {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("Invalid input. Enter a number.");
                 scanner.nextLine();
             }
         }
@@ -95,7 +99,7 @@ public class UserInterface {
                 scanner.nextLine();
                 return value;
             } else {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("Invalid input. Enter a number.");
                 scanner.nextLine();
             }
         }
@@ -106,7 +110,8 @@ public class UserInterface {
         return scanner.nextLine();
     }
 
-    // ================= TABLE =================
+    // ================= DISPLAY TABLE =================
+
     private void displayVehicles(ArrayList<Vehicle> vehicles) {
 
         if (vehicles == null || vehicles.isEmpty()) {
@@ -137,61 +142,51 @@ public class UserInterface {
         System.out.println(at.render());
     }
 
-    // ================= FUNCTIONS =================
+    // ================= FEATURES =================
 
     private void processAllVehiclesRequest() {
         displayVehicles(dealership.getAllVehicles());
     }
 
     private void processGetByPriceRequest() {
-
         double min = readDouble("Min price: ");
         double max = readDouble("Max price: ");
-
         displayVehicles(dealership.getVehiclesByPrice(min, max));
     }
 
     private void processGetByMakeModelRequest() {
-
         String make = readString("Make: ");
         String model = readString("Model: ");
-
         displayVehicles(dealership.getVehiclesByMakeModel(make, model));
     }
 
     private void processGetByYearRequest() {
-
         int min = readInt("Min year: ");
         int max = readInt("Max year: ");
-
         displayVehicles(dealership.getVehiclesByYear(min, max));
     }
 
     private void processGetByColorRequest() {
-
         String color = readString("Color: ");
-
         displayVehicles(dealership.getVehiclesByColor(color));
     }
 
     private void processGetByMileageRequest() {
-
         int min = readInt("Min mileage: ");
         int max = readInt("Max mileage: ");
-
         displayVehicles(dealership.getVehiclesByMileage(min, max));
     }
 
     private void processGetByTypeRequest() {
-
         String type = readString("Type: ");
-
         displayVehicles(dealership.getVehiclesByType(type));
     }
 
+    // ================= ADD VEHICLE =================
+
     private void processAddVehicleRequest() {
 
-        String vin = readString("VIN: ");
+        String vin = readString("Enter VIN: ").trim();
         int year = readInt("Year: ");
         String make = readString("Make: ");
         String model = readString("Model: ");
@@ -208,9 +203,11 @@ public class UserInterface {
         System.out.println("Vehicle added successfully.");
     }
 
+    // ================= REMOVE VEHICLE =================
+
     private void processRemoveVehicleRequest() {
 
-        String vin = readString("Enter VIN: ");
+        String vin = readString("Enter VIN: ").trim();
 
         Vehicle found = null;
 
@@ -228,5 +225,57 @@ public class UserInterface {
         } else {
             System.out.println("Vehicle not found.");
         }
+    }
+
+    // ================= SELL / LEASE =================
+
+    private void processSellOrLeaseRequest() {
+
+        String vin = readString("Enter VIN: ");
+
+        Vehicle selectedVehicle = null;
+
+        for (Vehicle v : dealership.getAllVehicles()) {
+            if (v.getVin().trim().equalsIgnoreCase(vin)) {
+                selectedVehicle = v;
+                break;
+            }
+        }
+
+        if (selectedVehicle == null) {
+            System.out.println("Vehicle not found.");
+            return;
+        }
+
+        String date = readString("Enter date (YYYYMMDD): ");
+        String name = readString("Customer name: ");
+        String email = readString("Customer email: ");
+
+        String type = readString("Sale or Lease? ").toLowerCase();
+
+        Contract contract;
+
+        if (type.equals("sale")) {
+
+            String financeInput = readString("Finance? (yes/no): ");
+            boolean finance = financeInput.equalsIgnoreCase("yes");
+
+            contract = new SalesContract(date, name, email, selectedVehicle, finance);
+
+        } else if (type.equals("lease")) {
+
+            contract = new LeaseContract(date, name, email, selectedVehicle);
+
+        } else {
+            System.out.println("Invalid option.");
+            return;
+        }
+
+        contractFileManager.saveContract(contract);
+
+        dealership.removeVehicle(selectedVehicle);
+        fileManager.saveDealership(dealership);
+
+        System.out.println("Contract completed successfully!");
     }
 }
