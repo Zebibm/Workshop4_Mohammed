@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 // Handles saving contracts to a file
 public class ContractFileManager {
 
-    private static final String FILE = "contracts.csv";
+    private static final String FILE = "src/main/resources/contracts.csv";
 
     // Saves either SALE or LEASE contract
     public void saveContract(Contract c) {

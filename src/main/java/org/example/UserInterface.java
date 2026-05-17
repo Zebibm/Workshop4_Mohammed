@@ -247,7 +247,9 @@ public class UserInterface {
             return;
         }
 
-        String date = readString("Enter date (YYYYMMDD): ");
+        //String date = readString("Enter date (YYYYMMDD): ");
+        String date =
+                String.valueOf(java.time.Year.now().getValue());
         String name = readString("Customer name: ");
         String email = readString("Customer email: ");
 
