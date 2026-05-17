@@ -1,9 +1,11 @@
 package org.example;
 
 import de.vandermeer.asciitable.AsciiTable;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+
+// USER INTERFACE CLASS
+// Handles all user input and menu actions for the dealership system
 
 public class UserInterface {
 
@@ -12,6 +14,7 @@ public class UserInterface {
     private DealershipFileManager fileManager = new DealershipFileManager();
     private ContractFileManager contractFileManager = new ContractFileManager();
 
+    // Main display loop - shows menu and processes user commands
     public void display() {
 
         init();
@@ -35,6 +38,7 @@ public class UserInterface {
                 case 8 -> processAddVehicleRequest();
                 case 9 -> processRemoveVehicleRequest();
                 case 10 -> processSellOrLeaseRequest();
+                case 11 -> processAdminRequest(); //
                 case 99 -> System.out.println("Goodbye!");
 
                 default -> System.out.println("Invalid option.");
@@ -43,7 +47,7 @@ public class UserInterface {
         } while (command != 99);
     }
 
-    // ================= INIT =================
+    // Loads dealership data from file
     private void init() {
         dealership = fileManager.getDealership();
 
@@ -53,7 +57,7 @@ public class UserInterface {
         }
     }
 
-    // ================= MENU =================
+    // Displays the main menu
     private void displayMenu() {
 
         System.out.println("\n=====================================");
@@ -70,7 +74,15 @@ public class UserInterface {
         System.out.println("8 - Add vehicle");
         System.out.println("9 - Remove vehicle");
         System.out.println("10 - Sell / Lease vehicle");
+        System.out.println("11 - Admin Menu"); //
         System.out.println("99 - Quit");
+    }
+
+    // ================= ADMIN =================
+    private void processAdminRequest() {
+
+        AdminUserInterface admin = new AdminUserInterface();
+        admin.display();
     }
 
     // ================= INPUT HELPERS =================
@@ -142,7 +154,7 @@ public class UserInterface {
         System.out.println(at.render());
     }
 
-    // ================= FEATURES =================
+    // ================= MENU ACTIONS =================
 
     private void processAllVehiclesRequest() {
         displayVehicles(dealership.getAllVehicles());
@@ -182,8 +194,6 @@ public class UserInterface {
         displayVehicles(dealership.getVehiclesByType(type));
     }
 
-    // ================= ADD VEHICLE =================
-
     private void processAddVehicleRequest() {
 
         String vin = readString("Enter VIN: ").trim();
@@ -202,8 +212,6 @@ public class UserInterface {
 
         System.out.println("Vehicle added successfully.");
     }
-
-    // ================= REMOVE VEHICLE =================
 
     private void processRemoveVehicleRequest() {
 
@@ -227,11 +235,9 @@ public class UserInterface {
         }
     }
 
-    // ================= SELL / LEASE =================
-
     private void processSellOrLeaseRequest() {
 
-        String vin = readString("Enter VIN: ");
+        String vin = readString("Enter VIN: ").trim();
 
         Vehicle selectedVehicle = null;
 
@@ -247,9 +253,7 @@ public class UserInterface {
             return;
         }
 
-        //String date = readString("Enter date (YYYYMMDD): ");
-        String date =
-                String.valueOf(java.time.Year.now().getValue());
+        String date = java.time.LocalDate.now().toString().replace("-", "");
         String name = readString("Customer name: ");
         String email = readString("Customer email: ");
 

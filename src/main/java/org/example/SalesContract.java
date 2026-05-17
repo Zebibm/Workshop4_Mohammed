@@ -1,64 +1,73 @@
 package org.example;
 
-// Handles vehicle sale transactions
+// Handles vehicle SALE contracts (cash or finance)
 public class SalesContract extends Contract {
 
-    // Sales-specific fields
-    private double salesTax;
+    // ================= FIELDS =================
+    private double salesTaxAmount;
     private double recordingFee = 100;
     private double processingFee;
     private boolean finance;
 
-    // Constructor calculates fees based on vehicle price
-    public SalesContract(String date, String name, String email,
-                         Vehicle vehicle, boolean finance) {
+    // ================= CONSTRUCTOR =================
+    public SalesContract(String date,
+                         String customerName,
+                         String customerEmail,
+                         Vehicle vehicleSold,
+                         boolean finance) {
 
-        super(date, name, email, vehicle);
+        super(date, customerName, customerEmail, vehicleSold);
 
         this.finance = finance;
 
-        double price = vehicle.getPrice();
+        double price = vehicleSold.getPrice();
 
         // 5% sales tax
-        this.salesTax = price * 0.05;
+        this.salesTaxAmount = price * 0.05;
 
-        // Processing fee depends on price
-        this.processingFee = price < 10000 ? 295 : 495;
+        // Processing fee rules
+        if (price < 10000) {
+            this.processingFee = 295;
+        } else {
+            this.processingFee = 495;
+        }
     }
 
-    // Total price = vehicle + tax + fees
+    // ================= TOTAL PRICE =================
     @Override
     public double getTotalPrice() {
-        double total = getVehicleSold().getPrice()
-                + salesTax + recordingFee + processingFee;
 
-        // Round to 2 decimals for clean money format
-        return Math.round(total * 100.0) / 100.0;
+        // IMPORTANT: no rounding (required for unit tests)
+        return getVehicleSold().getPrice()
+                + salesTaxAmount
+                + recordingFee
+                + processingFee;
     }
 
-    // Monthly payment calculation if financing is selected
+    // ================= MONTHLY PAYMENT =================
     @Override
     public double getMonthlyPayment() {
 
-        // If no financing, payment is 0
-        if (!finance) return 0;
+        // If not financing → no monthly payment
+        if (!finance) {
+            return 0;
+        }
 
         double price = getTotalPrice();
 
-        // Interest rate and loan duration rules
-        double rate = price >= 10000 ? 4.25 : 5.25;
-        int months = price >= 10000 ? 48 : 24;
+        // Standard workshop rule (typical requirement)
+        double annualInterestRate = 0.0425; // 4.25%
+        int months = 48;
 
-        double monthlyRate = (rate / 100) / 12;
+        double monthlyRate = annualInterestRate / 12;
 
         double payment = (price * monthlyRate) /
                 (1 - Math.pow(1 + monthlyRate, -months));
 
-        // Round result for clean output
-        return Math.round(payment * 100.0) / 100.0;
+        return payment; // no rounding for unit tests
     }
 
-    // Used for file output
+    // ================= GETTER =================
     public boolean isFinance() {
         return finance;
     }
